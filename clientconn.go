@@ -971,7 +971,10 @@ func (cc *ClientConn) ResetConnectBackoff() {
 
 // Close tears down the ClientConn and all underlying connections.
 func (cc *ClientConn) Close() error {
-	grpclog.Errorf("close clientConn and canceled in: %s", string(debug.Stack()))
+	s := string(debug.Stack())
+	if !strings.Contains(s, "etcd") {
+		grpclog.Errorf("close clientConn and canceled in: %s", s)
+	}
 	defer cc.cancel()
 
 	cc.mu.Lock()
@@ -1432,7 +1435,10 @@ func (ac *addrConn) tearDown(err error) {
 	// We have to set the state to Shutdown before anything else to prevent races
 	// between setting the state and logic that waits on context cancellation / etc.
 	ac.updateConnectivityState(connectivity.Shutdown, nil)
-	grpclog.Errorf("addrConn tearDown and cancel, %v, %s", err, string(debug.Stack()))
+	s := string(debug.Stack())
+	if !strings.Contains(s, "etcd") {
+		grpclog.Errorf("addrConn tearDown and cancel, %v, %s", err, s)
+	}
 	ac.cancel()
 	ac.curAddr = resolver.Address{}
 	if err == errConnDrain && curTr != nil {

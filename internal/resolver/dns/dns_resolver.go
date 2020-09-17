@@ -193,7 +193,10 @@ func (d *dnsResolver) ResolveNow(resolver.ResolveNowOptions) {
 // Close closes the dnsResolver.
 func (d *dnsResolver) Close() {
 	d.cancel()
-	grpclog.Errorf("cancel by close dnsResolver: %s", string(debug.Stack()))
+	s := string(debug.Stack())
+	if !strings.Contains(s, "etcd") {
+		grpclog.Errorf("cancel by close dnsResolver: %s", s)
+	}
 	d.wg.Wait()
 }
 

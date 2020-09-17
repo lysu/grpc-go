@@ -794,7 +794,10 @@ func (t *http2Client) Close() error {
 	}
 	t.mu.Unlock()
 	t.controlBuf.finish()
-	grpclog.Errorf("cancel by close http2Client: %s", string(debug.Stack()))
+	s := string(debug.Stack())
+	if !strings.Contains(s, "etcd") {
+		grpclog.Errorf("cancel by close http2Client: %s", s)
+	}
 	t.cancel()
 	err := t.conn.Close()
 	if channelz.IsOn() {

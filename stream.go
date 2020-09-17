@@ -25,6 +25,7 @@ import (
 	"math"
 	"runtime/debug"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -831,7 +832,10 @@ func (cs *clientStream) finish(err error) {
 			}
 		}
 	}
-	grpclog.Errorf("cancel by finish clientStream: %v, %s", err, string(debug.Stack()))
+	s := string(debug.Stack())
+	if !strings.Contains(s, "etcd") {
+		grpclog.Errorf("cancel by finish clientStream: %v, %s", err, s)
+	}
 	cs.cancel()
 }
 
@@ -1269,7 +1273,10 @@ func (as *addrConnStream) finish(err error) {
 	} else {
 		as.ac.incrCallsSucceeded()
 	}
-	grpclog.Errorf("cancel by finish addrConnStream: %v, %s", err, string(debug.Stack()))
+	s := string(debug.Stack())
+	if !strings.Contains(s, "etcd") {
+		grpclog.Errorf("cancel by finish addrConnStream: %v, %s", err, s)
+	}
 	as.cancel()
 	as.mu.Unlock()
 }

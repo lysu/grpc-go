@@ -25,6 +25,7 @@ import (
 	"net"
 	"runtime/debug"
 	"strconv"
+	"strings"
 	"time"
 
 	"google.golang.org/grpc/grpclog"
@@ -290,6 +291,9 @@ func (w *dnsWatcher) Next() ([]*Update, error) {
 }
 
 func (w *dnsWatcher) Close() {
-	grpclog.Errorf("cancel by close dnsWatcher: %s", string(debug.Stack()))
+	s := string(debug.Stack())
+	if !strings.Contains(s, "etcd") {
+		grpclog.Errorf("cancel by close dnsWatcher: %s", s)
+	}
 	w.cancel()
 }
