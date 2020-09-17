@@ -31,6 +31,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"runtime/debug"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
@@ -221,7 +222,7 @@ func FromContextError(err error) *Status {
 	case context.DeadlineExceeded:
 		return New(codes.DeadlineExceeded, err.Error())
 	case context.Canceled:
-		return New(codes.Canceled, err.Error())
+		return New(codes.Canceled, err.Error()+" | "+string(debug.Stack()))
 	default:
 		return New(codes.Unknown, err.Error())
 	}

@@ -28,6 +28,7 @@ import (
 	"io/ioutil"
 	"math"
 	"net/url"
+	"runtime/debug"
 	"strings"
 	"sync"
 	"time"
@@ -795,7 +796,7 @@ func toRPCErr(err error) error {
 		case context.DeadlineExceeded:
 			return status.Error(codes.DeadlineExceeded, err.Error())
 		case context.Canceled:
-			return status.Error(codes.Canceled, err.Error())
+			return status.Error(codes.Canceled, err.Error()+" | "+string(debug.Stack()))
 		}
 	}
 	return status.Error(codes.Unknown, err.Error())

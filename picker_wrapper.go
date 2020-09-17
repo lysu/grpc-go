@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"runtime/debug"
 	"sync"
 
 	"google.golang.org/grpc/balancer"
@@ -157,7 +158,7 @@ func (pw *pickerWrapper) pick(ctx context.Context, failfast bool, info balancer.
 				} else if connectionErr := pw.connectionError(); connectionErr != nil {
 					errStr = "latest connection error: " + connectionErr.Error()
 				} else {
-					errStr = ctx.Err().Error()
+					errStr = ctx.Err().Error() + " | " + string(debug.Stack())
 				}
 				switch ctx.Err() {
 				case context.DeadlineExceeded:

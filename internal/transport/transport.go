@@ -28,6 +28,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"runtime/debug"
 	"sync"
 	"sync/atomic"
 
@@ -802,7 +803,7 @@ func ContextErr(err error) error {
 	case context.DeadlineExceeded:
 		return status.Error(codes.DeadlineExceeded, err.Error())
 	case context.Canceled:
-		return status.Error(codes.Canceled, err.Error())
+		return status.Error(codes.Canceled, err.Error()+" | "+string(debug.Stack()))
 	}
 	return status.Errorf(codes.Internal, "Unexpected error from context packet: %v", err)
 }
