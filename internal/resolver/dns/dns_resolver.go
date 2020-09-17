@@ -194,7 +194,7 @@ func (d *dnsResolver) ResolveNow(resolver.ResolveNowOptions) {
 func (d *dnsResolver) Close() {
 	d.cancel()
 	s := string(debug.Stack())
-	if !strings.Contains(s, "etcd") {
+	if !strings.Contains(s, "etcd") && !strings.Contains(s, "pd/v4") {
 		grpclog.Errorf("cancel by close dnsResolver: %s", s)
 	}
 	d.wg.Wait()

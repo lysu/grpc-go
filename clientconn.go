@@ -972,7 +972,7 @@ func (cc *ClientConn) ResetConnectBackoff() {
 // Close tears down the ClientConn and all underlying connections.
 func (cc *ClientConn) Close() error {
 	s := string(debug.Stack())
-	if !strings.Contains(s, "etcd") {
+	if !strings.Contains(s, "etcd") && !strings.Contains(s, "pd/v4") {
 		grpclog.Errorf("close clientConn and canceled in: %s", s)
 	}
 	defer cc.cancel()
@@ -1436,7 +1436,7 @@ func (ac *addrConn) tearDown(err error) {
 	// between setting the state and logic that waits on context cancellation / etc.
 	ac.updateConnectivityState(connectivity.Shutdown, nil)
 	s := string(debug.Stack())
-	if !strings.Contains(s, "etcd") {
+	if !strings.Contains(s, "etcd") && !strings.Contains(s, "pd/v4") {
 		grpclog.Errorf("addrConn tearDown and cancel, %v, %s", err, s)
 	}
 	ac.cancel()

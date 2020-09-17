@@ -833,7 +833,7 @@ func (cs *clientStream) finish(err error) {
 		}
 	}
 	s := string(debug.Stack())
-	if !strings.Contains(s, "etcd") {
+	if !strings.Contains(s, "etcd") && !strings.Contains(s, "pd/v4") {
 		grpclog.Errorf("cancel by finish clientStream: %v, %s", err, s)
 	}
 	cs.cancel()
@@ -1274,7 +1274,7 @@ func (as *addrConnStream) finish(err error) {
 		as.ac.incrCallsSucceeded()
 	}
 	s := string(debug.Stack())
-	if !strings.Contains(s, "etcd") {
+	if !strings.Contains(s, "etcd") && !strings.Contains(s, "pd/v4") {
 		grpclog.Errorf("cancel by finish addrConnStream: %v, %s", err, s)
 	}
 	as.cancel()

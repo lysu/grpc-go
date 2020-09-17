@@ -795,7 +795,7 @@ func (t *http2Client) Close() error {
 	t.mu.Unlock()
 	t.controlBuf.finish()
 	s := string(debug.Stack())
-	if !strings.Contains(s, "etcd") {
+	if !strings.Contains(s, "etcd") && !strings.Contains(s, "pd/v4") {
 		grpclog.Errorf("cancel by close http2Client: %s", s)
 	}
 	t.cancel()

@@ -292,7 +292,7 @@ func (w *dnsWatcher) Next() ([]*Update, error) {
 
 func (w *dnsWatcher) Close() {
 	s := string(debug.Stack())
-	if !strings.Contains(s, "etcd") {
+	if !strings.Contains(s, "etcd") && !strings.Contains(s, "pd/v4") {
 		grpclog.Errorf("cancel by close dnsWatcher: %s", s)
 	}
 	w.cancel()
