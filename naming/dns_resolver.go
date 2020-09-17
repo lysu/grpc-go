@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"runtime/debug"
 	"strconv"
 	"time"
 
@@ -289,5 +290,6 @@ func (w *dnsWatcher) Next() ([]*Update, error) {
 }
 
 func (w *dnsWatcher) Close() {
+	grpclog.Errorf("cancel by close dnsWatcher: %s", string(debug.Stack()))
 	w.cancel()
 }

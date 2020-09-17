@@ -27,6 +27,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"sync"
@@ -192,6 +193,7 @@ func (d *dnsResolver) ResolveNow(resolver.ResolveNowOptions) {
 // Close closes the dnsResolver.
 func (d *dnsResolver) Close() {
 	d.cancel()
+	grpclog.Errorf("cancel by close dnsResolver: %s", string(debug.Stack()))
 	d.wg.Wait()
 }
 

@@ -21,9 +21,11 @@ package transport
 import (
 	"context"
 	"fmt"
+	"google.golang.org/grpc/grpclog"
 	"io"
 	"math"
 	"net"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"sync"
@@ -792,6 +794,7 @@ func (t *http2Client) Close() error {
 	}
 	t.mu.Unlock()
 	t.controlBuf.finish()
+	grpclog.Errorf("cancel by close http2Client: %s", string(debug.Stack()))
 	t.cancel()
 	err := t.conn.Close()
 	if channelz.IsOn() {
